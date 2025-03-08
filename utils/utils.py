@@ -13,12 +13,13 @@ load_dotenv()
 import tempfile
 import PyPDF2
 
-
+# Initialize the Firecrawl API client
 app = FirecrawlApp(api_key=os.getenv("FIRECRAWL_API_KEY"))
 openai_api_key = os.environ.get("OPENAI_API_KEY")
 openai_client = OpenAI(api_key=openai_api_key)
 
 
+# Define Pydantic models for data validation and serialization
 class CandidateScore(BaseModel):
     name: str = Field(..., description="Candidate's name")
     relevance: int = Field(
@@ -35,6 +36,7 @@ class CandidateScore(BaseModel):
     )
 
 
+# Define Pydantic models for data validation and serialization
 class Resume(BaseModel):
     name: str = Field(..., description="Candidate's full name")
     work_experiences: List[str] = Field(..., description="List of work experiences")
@@ -51,7 +53,7 @@ class Resume(BaseModel):
         None, description="Languages spoken by the candidate"
     )
 
-
+# Define Pydantic models for data validation and serialization
 class JobDescription(BaseModel):
     title: str
     company: str
@@ -59,7 +61,7 @@ class JobDescription(BaseModel):
     requirements: list[str]
     responsibilities: list[str]
 
-
+# Define Pydantic models for data validation and serialization
 class SkillGapAnalysis(BaseModel):
     matching_skills: List[str] = Field(..., description="Skills that match the job requirements")
     partial_matches: List[Dict[str, float]] = Field(..., description="Skills that partially match with confidence score")
@@ -68,11 +70,13 @@ class SkillGapAnalysis(BaseModel):
     overall_match_percentage: float = Field(..., description="Overall skills match percentage")
 
 
+# Define Pydantic models for data validation and serialization
 class EnhancedCandidateScore(CandidateScore):
     skill_gap_analysis: Optional[SkillGapAnalysis] = Field(None, description="Detailed analysis of skill gaps")
     skill_scores: Dict[str, float] = Field(default_factory=dict, description="Individual scores for each required skill")
 
 
+# Define Pydantic models for data validation and serialization
 async def ingest_inputs(
     job_description: str, resume_files: List[Any]
 ) -> Dict[str, Any]:
@@ -104,6 +108,8 @@ async def ingest_inputs(
     return {"job_description": job_desc_text, "resumes": resumes}
 
 
+
+# Call the OpenAI API to interact with the Language Model
 def call_llm(messages: list, response_format: None) -> str:
     """
     Calls the OpenAI GPT-4 model with the provided prompt and returns the response text.
@@ -125,6 +131,7 @@ def call_llm(messages: list, response_format: None) -> str:
     return response.choices[0].message.content
 
 
+# Parse the job description to extract key requirements
 async def parse_job_description(data: Dict[str, Any]) -> Dict[str, Any]:
     """
     Parses the job description to extract key requirements in a structured format.
@@ -177,6 +184,7 @@ async def parse_job_description(data: Dict[str, Any]) -> Dict[str, Any]:
     return structured_jd
 
 
+#Parse the resume files to extract candidate information using the LLM model (GPT-4)
 async def parse_resumes(resume_files: List[Any]) -> Dict[str, Any]:
     """
     Parses resume files to extract candidate information.
