@@ -3,5 +3,4 @@ kind: Namespace
 metadata:
   name: hiring-agent
   labels:
-    name: hiring-agent
     environment: development
