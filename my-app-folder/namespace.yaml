@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hiring-agent
+  labels:
+    name: hiring-agent
+    environment: development
