@@ -104,13 +104,13 @@ async def ingest_inputs(
     return {"job_description": job_desc_text, "resumes": resumes}
 
 
-def call_llm(messages: list, response_fromat: None) -> str:
+def call_llm(messages: list, response_format: None) -> str:
     """
     Calls the OpenAI GPT-4 model with the provided prompt and returns the response text.
 
     Parameters:
         messages (list): The messages to send to the LLM.
-        response_fromat (None): The expected response format.
+        response_format (None): The expected response format.
 
     Returns:
         str: The LLM's response.
@@ -168,7 +168,7 @@ async def parse_job_description(data: Dict[str, Any]) -> Dict[str, Any]:
     ]
 
     try:
-        llm_output = call_llm(messages, response_fromat=JobDescription)
+        llm_output = call_llm(messages, response_format=JobDescription)
         # Parse the JSON returned by the LLM
         structured_jd = json.loads(llm_output)
     except Exception as e:
@@ -234,7 +234,7 @@ async def parse_resumes(resume_files: List[Any]) -> Dict[str, Any]:
         try:
             # Call the LLM to process the resume text.
             # Pass the JSON schema (as a string) to instruct the LLM on the expected format.
-            llm_response = call_llm(messages, response_fromat=Resume)
+            llm_response = call_llm(messages, response_format=Resume)
             # Parse the JSON response from the LLM.
             parsed_resume = json.loads(llm_response)
         except Exception as e:
@@ -460,7 +460,7 @@ async def generate_email_templates(
             )
 
         try:
-            email_body = call_llm(messages, response_fromat=None)
+            email_body = call_llm(messages, response_format=None)
         except Exception as e:
             email_body = f"Error generating email: {e}"
 
