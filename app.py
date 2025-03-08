@@ -14,7 +14,7 @@ import plotly.graph_objects as go
 
 
 
-# Main App Title
+# Main App Title and Description
 st.title("Resume Screening Agent")
 
 # Input section for job description
